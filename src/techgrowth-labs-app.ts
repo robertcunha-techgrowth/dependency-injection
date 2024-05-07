@@ -1,4 +1,3 @@
-import { globalTarget } from "./global-target";
 import { getModuleMetadata } from "./module";
 
 export class TechgrowthLabsApp {
