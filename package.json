@@ -1,0 +1,24 @@
+{
+	"name": "dependency-injection",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"/dist"
+	],
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc --build",
+		"start": "ts-node index.ts"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"ts-node": "^10.9.2",
+		"typescript": "^5.4.5"
+	},
+	"dependencies": {
+		"reflect-metadata": "^0.2.2"
+	}
+}
