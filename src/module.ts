@@ -36,17 +36,6 @@ const createInstance = (provide: string) => {
 	return new constructorFunction();
 };
 
-const setModuleMetadata = (
-	name: string,
-	providersFormated: any,
-	handler: (event: any, context: any) => any,
-	mainProvider: MainProvider
-) => {
-	Reflect.defineMetadata(`${name}:providers`, providersFormated, globalTarget);
-	Reflect.defineMetadata(`${name}:handler`, handler, globalTarget);
-	Reflect.defineMetadata(`${name}:mainProvider`, mainProvider, globalTarget);
-};
-
 export const getModuleMetadata = (name: string) => {
 	const providers = Reflect.getMetadata(`${name}:providers`, globalTarget);
 	const handler: (event: any, context: any) => any = Reflect.getMetadata(
