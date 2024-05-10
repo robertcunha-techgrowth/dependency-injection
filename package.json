@@ -21,5 +21,8 @@
 	},
 	"dependencies": {
 		"reflect-metadata": "^0.2.2"
+	},
+	"publishConfig": {
+		"@techgrowth-labs:registry": "https://npm.pkg.github.com"
 	}
 }
