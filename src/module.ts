@@ -7,10 +7,16 @@ export interface MainProvider {
 
 export interface ModuleOptions {
 	imports?: ModuleOptions[];
-	providers?: Provider[];
-	exports?: [];
-	handler?: (event: any, context: any) => any;
-	mainProvider?: string;
+	providers: Provider[];
+	exports?: Provider[];
+
+	inject?: any[];
+	useFactory?: Function;
+}
+
+export interface MainModuleOptions extends ModuleOptions {
+	handler: (event: any, context: any) => any;
+	mainProvider: string;
 }
 
 const createInstance = (provide: string) => {
@@ -54,27 +60,55 @@ export const getModuleMetadata = (name: string) => {
 	};
 };
 
-export const Module = (moduleOptions: ModuleOptions = {}): ClassDecorator => {
+const setModuleData = (name: string, providers: Record<string, object>) => {
+	Reflect.defineMetadata(`${name}:providers`, providers, globalTarget);
+};
+
+const setMainModuleData = (
+	name: string,
+	providersFormated: Record<string, object>,
+	handler: ((event: any, context: any) => any) | undefined,
+	mainProvider: string
+) => {
+	setModuleData(name, providersFormated);
+	Reflect.defineMetadata(`${name}:handler`, handler, globalTarget);
+	Reflect.defineMetadata(
+		`${name}:mainProvider`,
+		providersFormated[mainProvider as string],
+		globalTarget
+	);
+};
+
+const formatProviders = (providers: Provider[]) => {
+	return providers?.reduce<Record<string, object>>((prev, provider) => {
+		const currentProvide = provider.provide as string;
+		prev[currentProvide] = createInstance(currentProvide);
+		return prev;
+	}, {}) as Record<string, object>;
+};
+
+export const Module = (moduleOptions: ModuleOptions): ClassDecorator => {
+	return (target: Function) => {
+		const { providers } = moduleOptions;
+		const providersFormated = formatProviders(providers);
+
+		setModuleData(target.name, providersFormated);
+	};
+};
+
+export const MainModule = (
+	moduleOptions: MainModuleOptions
+): ClassDecorator => {
+	// target is the constructor function of the class
 	return (target: Function) => {
 		const { providers, handler, mainProvider } = moduleOptions;
-		const providersFormated: any = providers?.reduce<Record<string, object>>(
-			(prev, provider) => {
-				const currentProvide = provider.provide as string;
-				prev[currentProvide] = createInstance(currentProvide);
-				return prev;
-			},
-			{}
-		);
-		Reflect.defineMetadata(
-			`${target.name}:providers`,
+		const providersFormated = formatProviders(providers);
+
+		setMainModuleData(
+			target.name,
 			providersFormated,
-			globalTarget
-		);
-		Reflect.defineMetadata(`${target.name}:handler`, handler, globalTarget);
-		Reflect.defineMetadata(
-			`${target.name}:mainProvider`,
-			providersFormated[mainProvider as string],
-			globalTarget
+			handler,
+			mainProvider as string
 		);
 	};
 };
