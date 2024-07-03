@@ -73,19 +73,9 @@ const getImportedInstanceFromExport = (moduleName: string, provide: string) => {
  */
 export const getModuleMetadata = (name: string) => {
 	const providers = Reflect.getMetadata(`${name}:providers`, globalTarget);
-	const handler: (event: any, context: any) => any = Reflect.getMetadata(
-		`${name}:handler`,
-		globalTarget
-	);
-	const mainProvider: MainProvider = Reflect.getMetadata(
-		`${name}:mainProvider`,
-		globalTarget
-	);
 
 	return {
 		providers,
-		handler,
-		mainProvider,
 	};
 };
 
@@ -94,10 +84,7 @@ export const getModuleMetadata = (name: string) => {
  * @param name - The name of the module.
  * @param providers - An object containing the providers.
  */
-export const setModuleData = (
-	name: string,
-	providers: Record<string, object>
-) => {
+const setModuleData = (name: string, providers: Record<string, object>) => {
 	Reflect.defineMetadata(`${name}:providers`, providers, globalTarget);
 };
 
@@ -131,7 +118,7 @@ const findInstance = (
  * @param providers - An array of providers.
  * @returns A record of providers with their corresponding instances.
  */
-export const setProviders = (
+const setProviders = (
 	currentModuleName: string,
 	importedModules: string[],
 	providers: Provider[]
@@ -153,7 +140,7 @@ export const setProviders = (
  * @param providers - An array of providers.
  * @returns An array of metadata values corresponding to the providers.
  */
-export const getProviders = (moduleName: string, providers: Provider[]) => {
+const getProviders = (moduleName: string, providers: Provider[]) => {
 	return providers.map((provider) => {
 		return Reflect.getMetadata(
 			`${moduleName}:${provider.provide}`,
@@ -167,7 +154,7 @@ export const getProviders = (moduleName: string, providers: Provider[]) => {
  * @param moduleName - The name of the module.
  * @param exports - An array of providers to be exported.
  */
-export const setExports = (moduleName: string, exports: Provider[]) => {
+const setExports = (moduleName: string, exports: Provider[]) => {
 	return exports.forEach((exp) => {
 		const instance = Reflect.getMetadata(
 			`${moduleName}:${exp.provide}`,
