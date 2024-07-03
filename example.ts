@@ -13,6 +13,7 @@ dotenv.config({
 export class A {
 	show() {
 		console.log("MOTHER FUCKER");
+		return "MOTHER FUCKER";
 	}
 }
 
@@ -21,7 +22,7 @@ export class B {
 	constructor(@Inject("A") private readonly a: A) {}
 
 	callA() {
-		this.a.show();
+		return this.a.show();
 	}
 }
 
@@ -33,7 +34,7 @@ export class C {
 	) {}
 
 	callB() {
-		this.b.callA();
+		return this.b.callA();
 	}
 }
 
@@ -68,8 +69,7 @@ export class Handler extends TechgrowthLabsLambdaHandler {
 	async startHandlerFunction(event: any, context: any): Promise<any> {
 		const { APP_MAIN_MODULE } = process.env;
 		const providers = this.getProviders(APP_MAIN_MODULE as string);
-		providers.C.callB();
-		return null;
+		return providers.C.callB();
 	}
 }
 
