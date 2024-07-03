@@ -73,9 +73,13 @@ const getImportedInstanceFromExport = (moduleName: string, provide: string) => {
  */
 export const getModuleMetadata = (name: string) => {
 	const providers = Reflect.getMetadata(`${name}:providers`, globalTarget);
+	const imports = Reflect.getMetadata(`${name}:imports`, globalTarget);
+	const exports = Reflect.getMetadata(`${name}:exports`, globalTarget);
 
 	return {
 		providers,
+		imports,
+		exports,
 	};
 };
 
