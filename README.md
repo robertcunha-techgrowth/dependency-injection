@@ -4,18 +4,6 @@ Dependency injection is a advanced technique of software engine to allow the dev
 
 # Decorators
 
-## Inject(propertyClassName: string)
-
-Inject is used to set a dependency into a class. You must set the propertyClassName, that will be used as provide name. The class needs to be decorated with Injectable to be a valid provider.
-
-```javascript
-export class Example {}
-
-export class ComposedClass {
-	constructor(@Inject("ExampleProvide") example: Example) {}
-}
-```
-
 ## Injectable()
 
 Injectable is used to make possible a class be used as provider and fit into the Inject decorator.
@@ -25,11 +13,27 @@ Injectable is used to make possible a class be used as provider and fit into the
 export class Example {}
 ```
 
+## Inject(propertyClassName: string)
+
+Inject is used to set a dependency into a class. You must set the propertyClassName, that will be used as provide name. The class needs to be decorated with Injectable to be a valid provider.
+
+```javascript
+@Injectable()
+export class Example {}
+
+@Injectable()
+export class ComposedClass {
+	constructor(@Inject("ExampleProvide") example: Example) {}
+}
+```
+
 ## Module(moduleOptions: ModuleOptions)
 
 Module is the decorator for an empty class, and serves as a reference to the module.
 
 ```javascript
+const ExampleProvider: Provider = {};
+
 @Module({
 	providers: [],
 })
@@ -47,6 +51,7 @@ For each import, there is a processing, to bring the imports, providers, handler
 ```javascript
 import { Module } from "@techgrowth-labs/dependency-injection";
 
+@Injectable()
 export class ProviderA {
 	sayHi() {
 		console.log("HI");
@@ -88,3 +93,9 @@ export default handler.startHandlerFunction;
 ```
 
 ### Add APP_MAIN_MODULE .env variable
+
+To everything woks well, you shall set the APP_MAIN_MODULE with the name of the MainModule, that contain all other modules imported.
+
+```
+APP_MAIN_MODULE=AModule
+```
