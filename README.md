@@ -40,7 +40,51 @@ export class ExampleModule {}
 
 For each import, there is a processing, to bring the imports, providers, handlers
 
-## MainModule
+## How to use?
 
-- MainProvider: Provider responsible to bear all other providers. It's the core of application
-- handler: Handler is the function responsible to process the event and context from lambda. It implements the code that will execute on lambda.
+### Creating Modules
+
+```javascript
+import { Module } from "@techgrowth-labs/dependency-injection";
+
+export class ProviderA {
+	sayHi() {
+		console.log("HI");
+	}
+}
+
+@Module({
+	providers: [
+		{
+			provide: "A",
+			useClass: ProviderA,
+		},
+	],
+})
+export class AModule {}
+```
+
+### Create the handler and override the lambda base function
+
+```javascript
+import { TechgrowthLabsLambdaHandler } from "@techgrowth-labs/dependency-injection";
+export class Handler extends TechgrowthLabsLambdaHandler {
+	override startHandlerFunction(event: any, context: any) {
+		const providers = this.getProviders();
+
+		// implement your function here, using providers
+	}
+}
+```
+
+### Create the index.ts
+
+```javascript
+import { Handler } from "./handler.ts";
+
+const handler = new Handler();
+
+export default handler.startHandlerFunction;
+```
+
+### Add APP_MAIN_MODULE .env variable
