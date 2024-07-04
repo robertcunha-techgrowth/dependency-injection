@@ -11,8 +11,12 @@ dotenv.config({
 
 @Injectable()
 export class A {
+	constructor(
+		@Inject("FactoryAttribute") private readonly factoryAttribute: string
+	) {}
+
 	show() {
-		console.log("MOTHER FUCKER");
+		console.log(this.factoryAttribute);
 		return "MOTHER FUCKER";
 	}
 }
@@ -38,6 +42,13 @@ export class C {
 	}
 }
 
+const FactoryAttributeProvider: Provider = {
+	provide: "FactoryAttribute",
+	useFactory: () => {
+		return "MOTHER FUCKER BITCH CHRORIMPAM, FODA DEMAIS";
+	},
+};
+
 const AProvider: Provider = {
 	useClass: A,
 	provide: "A",
@@ -49,8 +60,8 @@ const BProvider: Provider = {
 };
 
 @Module({
-	providers: [AProvider, BProvider],
-	exports: [AProvider, BProvider],
+	providers: [FactoryAttributeProvider, AProvider, BProvider],
+	exports: [AProvider, BProvider, FactoryAttributeProvider],
 })
 export class BModule {}
 
