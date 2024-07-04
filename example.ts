@@ -11,8 +11,13 @@ dotenv.config({
 
 @Injectable()
 export class A {
+	constructor(
+		@Inject("FactoryAttribute") private readonly factoryAttribute: string
+	) {}
+
 	show() {
-		console.log("MOTHER FUCKER");
+		console.log(this.factoryAttribute);
+		return "MOTHER FUCKER";
 	}
 }
 
@@ -21,7 +26,7 @@ export class B {
 	constructor(@Inject("A") private readonly a: A) {}
 
 	callA() {
-		this.a.show();
+		return this.a.show();
 	}
 }
 
@@ -33,9 +38,16 @@ export class C {
 	) {}
 
 	callB() {
-		this.b.callA();
+		return this.b.callA();
 	}
 }
+
+const FactoryAttributeProvider: Provider = {
+	provide: "FactoryAttribute",
+	useFactory: () => {
+		return "MOTHER FUCKER BITCH CHRORIMPAM, FODA DEMAIS";
+	},
+};
 
 const AProvider: Provider = {
 	useClass: A,
@@ -48,8 +60,8 @@ const BProvider: Provider = {
 };
 
 @Module({
-	providers: [AProvider, BProvider],
-	exports: [AProvider, BProvider],
+	providers: [FactoryAttributeProvider, AProvider, BProvider],
+	exports: [AProvider, BProvider, FactoryAttributeProvider],
 })
 export class BModule {}
 
@@ -68,8 +80,7 @@ export class Handler extends TechgrowthLabsLambdaHandler {
 	async startHandlerFunction(event: any, context: any): Promise<any> {
 		const { APP_MAIN_MODULE } = process.env;
 		const providers = this.getProviders(APP_MAIN_MODULE as string);
-		providers.C.callB();
-		return null;
+		return providers.C.callB();
 	}
 }
 

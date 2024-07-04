@@ -10,7 +10,6 @@ export const Inject = (propertyClassName: string): ParameterDecorator => {
 		Reflect.defineMetadata(
 			`${className}:parameters:${parameterIndex}`,
 			{
-				useClass: target,
 				provide: propertyClassName,
 			},
 			globalTarget,

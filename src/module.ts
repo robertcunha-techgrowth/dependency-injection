@@ -17,31 +17,57 @@ export interface ModuleOptions {
  * @param provide - The name of the provided service.
  * @returns The instance of the module.
  */
-const setInstance = (moduleName: string, provide: string) => {
+const createInstance = (
+	importedModules: any[],
+	moduleName: string,
+	provide: string
+) => {
 	const constructorFunction = Reflect.getMetadata(
 		`${provide}:constructor`,
 		globalTarget
 	);
-	const maxIndex = constructorFunction.length;
-	if (maxIndex > 0) {
-		const parameters = Array(maxIndex)
-			.fill(0)
-			.reduce((prev, _, index) => {
-				const parameter = Reflect.getMetadata(
-					`${provide}:parameters:${index}`,
-					globalTarget
-				);
-				const parameterCreated = setInstance(moduleName, parameter.provide);
-				prev.push(parameterCreated);
-				return prev;
-			}, []);
-		const instance = new constructorFunction(...parameters);
+	if (constructorFunction) {
+		const maxIndex = constructorFunction.length;
+		if (maxIndex > 0) {
+			const parameters = Array(maxIndex)
+				.fill(0)
+				.reduce((prev, _, index) => {
+					const parameter = Reflect.getMetadata(
+						`${provide}:parameters:${index}`,
+						globalTarget
+					);
+					const importedParameter = importedModules
+						.map((module) => importFromExportsModule(module, parameter.provide))
+						.filter((instance) => instance)
+						.pop();
+
+					if (importedParameter) {
+						prev.push(importedParameter);
+						return prev;
+					}
+					const parameterCreated = createInstance(
+						importedModules,
+						moduleName,
+						parameter.provide
+					);
+					prev.push(parameterCreated);
+					return prev;
+				}, []);
+			const instance = new constructorFunction(...parameters);
+			Reflect.defineMetadata(
+				`${moduleName}:${provide}`,
+				instance,
+				globalTarget
+			);
+			return instance;
+		}
+		const instance = new constructorFunction();
 		Reflect.defineMetadata(`${moduleName}:${provide}`, instance, globalTarget);
 		return instance;
+	} else {
+		const instance = getInstance(moduleName, provide);
+		return instance;
 	}
-	const instance = new constructorFunction();
-	Reflect.defineMetadata(`${moduleName}:${provide}`, instance, globalTarget);
-	return instance;
 };
 
 /**
@@ -62,8 +88,8 @@ const getInstance = (moduleName: string, provide: string) => {
  * @param provide - The name of the exported instance to retrieve.
  * @returns The imported instance.
  */
-const getImportedInstanceFromExport = (moduleName: string, provide: string) => {
-	return getInstance(`export:${moduleName}`, provide);
+const importFromExportsModule = (moduleName: string, provide: string) => {
+	return Reflect.getMetadata(`export:${moduleName}:${provide}`, globalTarget);
 };
 
 /**
@@ -73,9 +99,13 @@ const getImportedInstanceFromExport = (moduleName: string, provide: string) => {
  */
 export const getModuleMetadata = (name: string) => {
 	const providers = Reflect.getMetadata(`${name}:providers`, globalTarget);
+	const imports = Reflect.getMetadata(`${name}:imports`, globalTarget);
+	const exports = Reflect.getMetadata(`${name}:exports`, globalTarget);
 
 	return {
 		providers,
+		imports,
+		exports,
 	};
 };
 
@@ -102,11 +132,10 @@ const findInstance = (
 ) => {
 	return (
 		importedModulesNames
-			.map((moduleName) =>
-				getImportedInstanceFromExport(moduleName, providerName)
-			)
+			.map((moduleName) => importFromExportsModule(moduleName, providerName))
 			.filter((instance) => instance)
-			.pop() ?? setInstance(currentModuleName, providerName)
+			.pop() ??
+		createInstance(importedModulesNames, currentModuleName, providerName)
 	);
 };
 
@@ -118,35 +147,43 @@ const findInstance = (
  * @param providers - An array of providers.
  * @returns A record of providers with their corresponding instances.
  */
-const setProviders = (
+const setInstanceProviders = (
 	currentModuleName: string,
 	importedModules: string[],
 	providers: Provider[]
 ) => {
 	return providers?.reduce<Record<string, object>>((prev, provider) => {
 		const currentProvide = provider.provide as string;
-		prev[currentProvide] = findInstance(
-			currentModuleName,
+		const instances = importedModules
+			.map((moduleName) => importFromExportsModule(moduleName, currentProvide))
+			.filter((instance) => instance);
+		const importedInstance = instances.pop();
+		if (importedInstance) {
+			prev[currentProvide] = importedInstance;
+			return prev;
+		}
+
+		const factoryInstance = provider.useFactory?.();
+
+		if (factoryInstance) {
+			Reflect.defineMetadata(
+				`${currentModuleName}:${currentProvide}`,
+				factoryInstance,
+				globalTarget
+			);
+			prev[currentProvide] = factoryInstance;
+			return prev;
+		}
+
+		const instanceCreated = createInstance(
 			importedModules,
+			currentModuleName,
 			currentProvide
 		);
+
+		prev[currentProvide] = instanceCreated;
 		return prev;
 	}, {}) as Record<string, object>;
-};
-
-/**
- * Retrieves the providers for a given module.
- * @param moduleName - The name of the module.
- * @param providers - An array of providers.
- * @returns An array of metadata values corresponding to the providers.
- */
-const getProviders = (moduleName: string, providers: Provider[]) => {
-	return providers.map((provider) => {
-		return Reflect.getMetadata(
-			`${moduleName}:${provider.provide}`,
-			globalTarget
-		);
-	});
 };
 
 /**
@@ -180,7 +217,7 @@ export const Module = (moduleOptions: ModuleOptions = {}): ClassDecorator => {
 		const { providers, imports, exports } = moduleOptions;
 		const importsModulesNames = imports?.map((module) => module.name) ?? [];
 
-		const providersFormated = setProviders(
+		const providersFormated = setInstanceProviders(
 			moduleName,
 			importsModulesNames,
 			providers ?? []
