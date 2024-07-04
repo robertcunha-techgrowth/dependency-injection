@@ -1,6 +1,6 @@
 export class Provider {
 	provide?: string;
 	useClass?: any;
-	useFactory?: any;
+	useFactory?: Function;
 	inject?: any[];
 }
