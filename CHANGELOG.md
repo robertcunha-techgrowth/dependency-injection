@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.1.0...v1.2.0) (2024-07-05)
+
+
+### Features
+
+* throw error ([039488a](https://github.com/Techgrowth-Labs/dependency-injection/commit/039488a8b11de0856030498663bc5bc711303033))
+
 ## [1.1.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.0.2...v1.1.0) (2024-07-05)
 
 
