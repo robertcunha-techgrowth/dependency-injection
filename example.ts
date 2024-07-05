@@ -77,7 +77,7 @@ const CProvider: Provider = {
 export class CModule {}
 
 export class Handler extends TechgrowthLabsLambdaHandler {
-	async startHandlerFunction(event: any, context: any): Promise<any> {
+	async handler(event: any, context: any): Promise<any> {
 		const { APP_MAIN_MODULE } = process.env;
 		const providers = this.getProviders(APP_MAIN_MODULE as string);
 		return providers.C.callB();
@@ -85,4 +85,4 @@ export class Handler extends TechgrowthLabsLambdaHandler {
 }
 
 const handler = new Handler();
-handler.startHandlerFunction(null, null);
+handler.handler(null, null);
