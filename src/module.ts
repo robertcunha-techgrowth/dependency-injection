@@ -66,6 +66,9 @@ const createInstance = (
 		return instance;
 	} else {
 		const instance = getInstance(moduleName, provide);
+		if (!instance) {
+			throw new Error(`Instance not found for ${provide}`);
+		}
 		return instance;
 	}
 };
