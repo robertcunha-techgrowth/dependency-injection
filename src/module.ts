@@ -67,6 +67,9 @@ const createInstance = (
 	} else {
 		const instance = getInstance(moduleName, provide);
 		if (!instance) {
+			console.error(
+				`${new Date().toISOString()}: Instance not found for ${provide}. Please check if the provider was imported.`
+			);
 			throw new Error(`Instance not found for ${provide}`);
 		}
 		return instance;
