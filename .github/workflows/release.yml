@@ -25,6 +25,7 @@ jobs:
           release-type: simple
   publish:
     runs-on: ubuntu-latest
+    needs: release-please
     steps:
       - uses: actions/checkout@v2
       - name: Publish release
