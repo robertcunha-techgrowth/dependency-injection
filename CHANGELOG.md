@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.2.0...v1.3.0) (2024-07-05)
+
+
+### Features
+
+* logs ([58f2c69](https://github.com/Techgrowth-Labs/dependency-injection/commit/58f2c699c56740ba135c7e5a9ff16e6617722e1c))
+
 ## [1.2.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.1.0...v1.2.0) (2024-07-05)
 
 
