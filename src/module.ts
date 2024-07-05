@@ -11,6 +11,15 @@ export interface ModuleOptions {
 	exports?: Provider[];
 }
 
+const checkInstance = (instance: any, provide: string) => {
+	if (!instance) {
+		console.error(
+			`${new Date().toISOString()}: Instance not found for ${provide}. Please check if the provider was imported.`
+		);
+		throw new Error(`Instance not found for ${provide}`);
+	}
+};
+
 /**
  * Sets an instance of a module by invoking the constructor function and resolving its dependencies recursively.
  * @param moduleName - The name of the module.
@@ -62,16 +71,12 @@ const createInstance = (
 			return instance;
 		}
 		const instance = new constructorFunction();
+		checkInstance(instance, provide);
 		Reflect.defineMetadata(`${moduleName}:${provide}`, instance, globalTarget);
 		return instance;
 	} else {
 		const instance = getInstance(moduleName, provide);
-		if (!instance) {
-			console.error(
-				`${new Date().toISOString()}: Instance not found for ${provide}. Please check if the provider was imported.`
-			);
-			throw new Error(`Instance not found for ${provide}`);
-		}
+		checkInstance(instance, provide);
 		return instance;
 	}
 };
