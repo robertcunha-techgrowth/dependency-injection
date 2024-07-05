@@ -23,12 +23,3 @@ jobs:
           # this is a built-in strategy in release-please, see "Action Inputs"
           # for more options
           release-type: simple
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Publish release
-        run: |
-          echo "Publishing release"
-          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-          npm publish
