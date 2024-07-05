@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.0.2...v1.1.0) (2024-07-05)
+
+
+### Features
+
+* add factory ([f8958a7](https://github.com/Techgrowth-Labs/dependency-injection/commit/f8958a70173bf508df6ef24d415e6f0c4c3be61b))
+
 ## [1.0.2](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.0.1...v1.0.2) (2024-07-03)
 
 
