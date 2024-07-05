@@ -1,4 +1,4 @@
-import { ModuleOptions, getModuleMetadata } from "./module";
+import { getModuleMetadata } from "./module";
 
 export class TestModule {
 	private providers: any;
