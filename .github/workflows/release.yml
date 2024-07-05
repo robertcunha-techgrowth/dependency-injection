@@ -29,4 +29,5 @@ jobs:
       - name: Publish release
         run: |
           echo "Publishing release"
+          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           npm publish
