@@ -1,5 +1,5 @@
 import { globalTarget } from "./global-target";
-import { importFromExportsModule } from "./module";
+import { findInstanceFromExportModule } from "./module";
 import { Provider } from "./provider";
 
 export interface SetInstanceParams {}
@@ -29,10 +29,7 @@ export abstract class SetInstance {
 export class SetInstanceImports extends SetInstance {
 	override execute(params: SetInstanceImportsParams) {
 		const { importedModules, currentProvide } = params;
-		const instances = importedModules
-			.map((moduleName) => importFromExportsModule(moduleName, currentProvide))
-			.filter((instance) => instance);
-		return instances.pop();
+		return findInstanceFromExportModule(importedModules, currentProvide);
 	}
 }
 
@@ -72,36 +69,18 @@ export class SetInstanceByNewOne extends SetInstance {
 			`${provide}:constructor`,
 			globalTarget
 		);
+
 		if (constructorFunction) {
-			const maxIndex = constructorFunction.length;
-			if (maxIndex > 0) {
-				const parameters = Array(maxIndex)
-					.fill(0)
-					.reduce((prev, _, index) => {
-						const parameter = this.findParameter(
-							provide,
-							index,
-							importedModules,
-							moduleName
-						);
-						prev.push(parameter);
-						return prev;
-					}, []);
-				const instance = new constructorFunction(...parameters);
-				Reflect.defineMetadata(
-					`${moduleName}:${provide}`,
-					instance,
-					globalTarget
-				);
-				return instance;
-			}
-			const instance = new constructorFunction();
-			this.checkInstance(instance, provide);
-			Reflect.defineMetadata(
-				`${moduleName}:${provide}`,
-				instance,
-				globalTarget
+			const parameters = this.findInstanceParameters(
+				constructorFunction,
+				provide,
+				importedModules,
+				moduleName
 			);
+
+			const instance = new constructorFunction(...parameters);
+			this.checkInstance(instance, provide);
+			this.setModuleMetadataProvider(moduleName, provide, instance);
 			return instance;
 		} else {
 			const instance = this.getInstance(moduleName, provide);
@@ -110,20 +89,50 @@ export class SetInstanceByNewOne extends SetInstance {
 		}
 	}
 
+	private setModuleMetadataProvider(
+		moduleName: string,
+		provide: string,
+		instance: any
+	) {
+		Reflect.defineMetadata(`${moduleName}:${provide}`, instance, globalTarget);
+	}
+
+	private findInstanceParameters(
+		constructorFunction: any,
+		provide: string,
+		importedModules: string[],
+		moduleName: string
+	) {
+		const maxIndex = constructorFunction.length;
+		return Array(maxIndex)
+			.fill(0)
+			.reduce((prev, _, index) => {
+				const parameter = this.findParameter(
+					provide,
+					index,
+					importedModules,
+					moduleName
+				);
+				prev.push(parameter);
+				return prev;
+			}, []);
+	}
+
 	private findParameter(
 		provide: string,
 		index: number,
-		importedModules: any[],
+		importedModules: string[],
 		moduleName: string
 	) {
 		const parameter = Reflect.getMetadata(
 			`${provide}:parameters:${index}`,
 			globalTarget
 		);
-		const importedParameter = importedModules
-			.map((module) => importFromExportsModule(module, parameter.provide))
-			.filter((instance) => instance)
-			.pop();
+
+		const importedParameter = findInstanceFromExportModule(
+			importedModules,
+			parameter.provide
+		);
 
 		if (importedParameter) {
 			return importedParameter;
