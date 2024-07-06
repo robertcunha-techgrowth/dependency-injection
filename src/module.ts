@@ -26,10 +26,7 @@ export interface ModuleOptions {
 	exports?: Provider[];
 }
 
-export const importFromExportsModule = (
-	moduleName: string,
-	provide: string
-) => {
+const getExportFromModule = (moduleName: string, provide: string) => {
 	return Reflect.getMetadata(`export:${moduleName}:${provide}`, globalTarget);
 };
 
@@ -88,6 +85,16 @@ const defineInstanceSeter = (
 	}
 };
 
+export const findInstanceFromExportModule = (
+	importedModules: string[],
+	currentProvide: string
+) => {
+	return importedModules
+		.map((moduleName) => getExportFromModule(moduleName, currentProvide))
+		.filter((instance) => instance)
+		.pop();
+};
+
 const setInstanceProviders = (
 	currentModuleName: string,
 	importedModules: string[],
@@ -95,10 +102,10 @@ const setInstanceProviders = (
 ) => {
 	return providers?.reduce<Record<string, object>>((prev, provider) => {
 		const currentProvide = provider.provide as string;
-		const instances = importedModules
-			.map((moduleName) => importFromExportsModule(moduleName, currentProvide))
-			.filter((instance) => instance);
-		const importedInstance = instances.pop();
+		const importedInstance = findInstanceFromExportModule(
+			importedModules,
+			currentProvide
+		);
 
 		const { setInstance, params } = defineInstanceSeter(
 			importedInstance,
@@ -107,7 +114,9 @@ const setInstanceProviders = (
 			currentProvide,
 			importedModules
 		) as any;
+
 		const instance = setInstance.execute(params);
+
 		prev[currentProvide] = instance;
 		return prev;
 	}, {}) as Record<string, object>;
