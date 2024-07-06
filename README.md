@@ -69,6 +69,26 @@ export class ProviderA {
 export class AModule {}
 ```
 
+### useFactory
+
+```javascript
+@Module({
+	providers: [
+		{
+			provide: "AxiosInstance",
+			useFactory: () => {
+				return axios.create({
+					baseURL: process.env.URL,
+					headers: {}
+				})
+			}
+		}
+	]
+})
+```
+
+You are free to use factory in any way you want.
+
 ### Create the handler and override the lambda base function
 
 ```javascript
@@ -89,7 +109,7 @@ import { Handler } from "./handler.ts";
 
 const handler = new Handler();
 
-export default handler.startHandlerFunction;
+export const { handler } = handler;
 ```
 
 ### Add APP_MAIN_MODULE .env variable
