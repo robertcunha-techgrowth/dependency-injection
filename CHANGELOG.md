@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.5.0...v1.6.0) (2024-07-06)
+
+
+### Features
+
+* set instance ([c42eded](https://github.com/Techgrowth-Labs/dependency-injection/commit/c42ededaa657a72b42377fc0cc55203c338b2f17))
+
 ## [1.5.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.4.0...v1.5.0) (2024-07-05)
 
 
