@@ -1,10 +1,6 @@
 import { globalTarget } from "./global-target";
-import { Provider } from "./provider";
-import {
-	SetInstanceByNewOne,
-	SetInstanceFactory,
-	SetInstanceImports,
-} from "./set-instance";
+import { ModuleMetadata } from "./module-metadata";
+import { BaseProvider } from "./provider";
 
 /**
  * Represents the options for a module.
@@ -18,71 +14,16 @@ export interface ModuleOptions {
 	/**
 	 * An array of providers to be registered within the module.
 	 */
-	providers?: Provider[];
+	providers?: BaseProvider[];
 
 	/**
 	 * An array of providers to be exported from the module.
 	 */
-	exports?: Provider[];
+	exports?: BaseProvider[];
 }
 
 const getExportFromModule = (moduleName: string, provide: string) => {
 	return Reflect.getMetadata(`export:${moduleName}:${provide}`, globalTarget);
-};
-
-export const getModuleMetadata = (name: string) => {
-	const providers = Reflect.getMetadata(`${name}:providers`, globalTarget);
-	const imports = Reflect.getMetadata(`${name}:imports`, globalTarget);
-	const exports = Reflect.getMetadata(`${name}:exports`, globalTarget);
-
-	return {
-		providers,
-		imports,
-		exports,
-	};
-};
-
-const setModuleData = (name: string, providers: Record<string, object>) => {
-	Reflect.defineMetadata(`${name}:providers`, providers, globalTarget);
-};
-
-const defineInstanceSeter = (
-	importedInstance: any,
-	provider: Provider,
-	currentModuleName: string,
-	currentProvide: string,
-	importedModules: string[]
-) => {
-	if (importedInstance) {
-		return {
-			params: {
-				instance: importedInstance,
-			},
-			setInstance: new SetInstanceImports(),
-		};
-	} else if (provider.useFactory) {
-		return {
-			params: {
-				provider,
-				currentModuleName,
-				currentProvide,
-			},
-			setInstance: new SetInstanceFactory(),
-		};
-	} else if (provider.useClass) {
-		return {
-			params: {
-				importedModules,
-				currentProvide,
-				currentModuleName,
-			},
-			setInstance: new SetInstanceByNewOne(),
-		};
-	} else {
-		throw new Error(
-			"Invalid provider. useFactory or useClass must be provided."
-		);
-	}
 };
 
 export const findInstanceFromExportModule = (
@@ -95,60 +36,53 @@ export const findInstanceFromExportModule = (
 		.pop();
 };
 
-const setInstanceProviders = (
-	currentModuleName: string,
-	importedModules: string[],
-	providers: Provider[]
-) => {
-	return providers?.reduce<Record<string, object>>((prev, provider) => {
-		const currentProvide = provider.provide as string;
-		const importedInstance = findInstanceFromExportModule(
-			importedModules,
-			currentProvide
-		);
-
-		const { setInstance, params } = defineInstanceSeter(
-			importedInstance,
-			provider,
-			currentModuleName,
-			currentProvide,
-			importedModules
-		) as any;
-
-		const instance = setInstance.execute(params);
-
-		prev[currentProvide] = instance;
-		return prev;
-	}, {}) as Record<string, object>;
-};
-
-const setExports = (moduleName: string, exports: Provider[]) => {
-	return exports.forEach((exp) => {
-		const instance = Reflect.getMetadata(
-			`${moduleName}:${exp.provide}`,
-			globalTarget
-		);
-		Reflect.defineMetadata(
-			`export:${moduleName}:${exp.provide}`,
-			instance,
-			globalTarget
-		);
-	});
+const setExports = (moduleName: string, exports: BaseProvider[]) => {
+	Reflect.defineMetadata(`${moduleName}:exports`, exports, globalTarget);
 };
 
 export const Module = (moduleOptions: ModuleOptions = {}): ClassDecorator => {
 	return (target: Function) => {
+		const moduleMetadata = new ModuleMetadata();
 		const moduleName = target.name;
 		const { providers, imports, exports } = moduleOptions;
-		const importsModulesNames = imports?.map((module) => module.name) ?? [];
 
-		const providersFormated = setInstanceProviders(
-			moduleName,
-			importsModulesNames,
-			providers ?? []
+		imports?.map((module) => {
+			const { exports: exportsFromImports } = moduleMetadata.getModuleMetadata(
+				module.name
+			);
+			return exportsFromImports.map((exportedProvider) => {
+				const instance = moduleMetadata.getInstance(
+					module.name,
+					exportedProvider.provide as string
+				);
+				moduleMetadata.setProviderMetadata(
+					moduleName,
+					exportedProvider.provide as string,
+					instance
+				);
+				return instance;
+			});
+		});
+
+		const instancesAsObject = providers?.reduce<Record<string, object>>(
+			(prev, provider) => {
+				const instance = provider.createInstance(
+					moduleName,
+					provider.provide as string
+				);
+				const key = provider.provide as string;
+				prev[key] = instance;
+				return prev;
+			},
+			{}
 		);
 
-		setModuleData(target.name, providersFormated);
+		Reflect.defineMetadata(
+			`${moduleName}:providers`,
+			instancesAsObject,
+			globalTarget
+		);
+
 		setExports(target.name, exports ?? []);
 	};
 };
