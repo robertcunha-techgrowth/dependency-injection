@@ -47,6 +47,12 @@ export class ClassProvider extends BaseProvider {
 	}
 
 	public createInstance(moduleName: string, provide: string) {
+		const instance = this.moduleMetadata.getInstance(moduleName, provide);
+
+		if (instance) {
+			return instance;
+		}
+
 		const constructorFunction = Reflect.getMetadata(
 			`${provide}:constructor`,
 			globalTarget
@@ -64,9 +70,7 @@ export class ClassProvider extends BaseProvider {
 			this.moduleMetadata.setProviderMetadata(moduleName, provide, instance);
 			return instance;
 		} else {
-			const instance = this.moduleMetadata.getInstance(moduleName, provide);
-			this.checkInstance(instance, provide);
-			return instance;
+			throw new Error(`Instance not found for ${provide}`);
 		}
 	}
 
