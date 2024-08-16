@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.6.0...v1.7.0) (2024-08-16)
+
+
+### Features
+
+* module metadata class ([39b1cf6](https://github.com/Techgrowth-Labs/dependency-injection/commit/39b1cf6e07a51708bb7879652e1589d372c1067d))
+* provider sub classes ([de31afb](https://github.com/Techgrowth-Labs/dependency-injection/commit/de31afb6bb452070a51271de654bee5a1c69402d))
+
 ## [1.6.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.5.0...v1.6.0) (2024-07-06)
 
 
