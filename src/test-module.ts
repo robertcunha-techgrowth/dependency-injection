@@ -1,10 +1,12 @@
-import { getModuleMetadata } from "./module";
+import { ModuleMetadata } from "./module-metadata";
+
+const moduleMetadataObj = new ModuleMetadata();
 
 export class TestModule {
 	private providers: any;
 
 	constructor(name: string) {
-		const moduleMetadata = getModuleMetadata(name);
+		const moduleMetadata = moduleMetadataObj.getModuleMetadata(name);
 		this.providers = moduleMetadata.providers;
 	}
 

@@ -119,3 +119,11 @@ To everything woks well, you shall set the APP_MAIN_MODULE with the name of the 
 ```
 APP_MAIN_MODULE=AModule
 ```
+
+### Complex use of Reflect
+
+We use reflect to set some important configuration for Dependency Injection
+
+- Injectable: defines a constructor of a class. The structure to create a key for the injectable classes is `${className}:constructor`
+
+- Inject: defines each parameter from a class. The structure to create a key for the injected parameter is `${className}:parameters:${index}`.

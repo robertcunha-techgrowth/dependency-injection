@@ -1,7 +1,7 @@
 import { Inject } from "./src/inject";
 import { Injectable } from "./src/injectable";
 import { Module } from "./src/module";
-import { Provider } from "./src/provider";
+import { BaseProvider, ClassProvider, FactoryProvider } from "./src/provider";
 import { TechgrowthLabsLambdaHandler } from "./src/techgrowth-labs-lambda-handler";
 import dotenv from "dotenv";
 
@@ -42,22 +42,22 @@ export class C {
 	}
 }
 
-const FactoryAttributeProvider: Provider = {
+const FactoryAttributeProvider: BaseProvider = new FactoryProvider({
 	provide: "FactoryAttribute",
 	useFactory: () => {
 		return "MOTHER FUCKER BITCH CHRORIMPAM, FODA DEMAIS";
 	},
-};
+});
 
-const AProvider: Provider = {
+const AProvider: BaseProvider = new ClassProvider({
 	useClass: A,
 	provide: "A",
-};
+});
 
-const BProvider: Provider = {
+const BProvider: BaseProvider = new ClassProvider({
 	useClass: B,
 	provide: "B",
-};
+});
 
 @Module({
 	providers: [FactoryAttributeProvider, AProvider, BProvider],
@@ -65,10 +65,10 @@ const BProvider: Provider = {
 })
 export class BModule {}
 
-const CProvider: Provider = {
+const CProvider: BaseProvider = new ClassProvider({
 	useClass: C,
 	provide: "C",
-};
+});
 
 @Module({
 	imports: [BModule],
