@@ -4,7 +4,6 @@ const moduleMetadataObj = new ModuleMetadata();
 
 export class TestModule {
 	private providers: any;
-
 	constructor(module: any) {
 		const moduleMetadata = moduleMetadataObj.getModuleMetadata(module.name);
 		this.providers = moduleMetadata.providers;
