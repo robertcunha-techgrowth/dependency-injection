@@ -107,18 +107,12 @@ export class Handler extends TechgrowthLabsLambdaHandler {
 ```javascript
 import { Handler } from "./handler.ts";
 
-const handler = new Handler();
+const handler = new Handler(MainModule);
 
 export const { handler } = handler;
 ```
 
-### Add APP_MAIN_MODULE .env variable
-
-To everything woks well, you shall set the APP_MAIN_MODULE with the name of the MainModule, that contain all other modules imported.
-
-```
-APP_MAIN_MODULE=AModule
-```
+Set MainModule on constructor Handler.
 
 ### Complex use of Reflect
 
