@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.7.0...v1.7.1) (2024-08-16)
+
+
+### Bug Fixes
+
+* module ([a059c86](https://github.com/Techgrowth-Labs/dependency-injection/commit/a059c86e2ddb12b0e53b2c25722b39c4f7389646))
+
 ## [1.7.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.6.0...v1.7.0) (2024-08-16)
 
 
