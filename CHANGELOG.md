@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.4](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.7.3...v1.7.4) (2024-08-16)
+
+
+### Bug Fixes
+
+* constructor ([2d5014e](https://github.com/Techgrowth-Labs/dependency-injection/commit/2d5014e8aa967ff47dad0c78fd029d6838167af6))
+
 ## [1.7.3](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.7.2...v1.7.3) (2024-08-16)
 
 
