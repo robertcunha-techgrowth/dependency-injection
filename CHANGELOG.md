@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.7.1...v1.7.2) (2024-08-16)
+
+
+### Bug Fixes
+
+* instance ([de9adc4](https://github.com/Techgrowth-Labs/dependency-injection/commit/de9adc44a2ba0ce2a7fd4899455b91ac5057349a))
+
 ## [1.7.1](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.7.0...v1.7.1) (2024-08-16)
 
 
