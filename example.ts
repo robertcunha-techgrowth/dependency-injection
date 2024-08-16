@@ -78,11 +78,10 @@ export class CModule {}
 
 export class Handler extends TechgrowthLabsLambdaHandler {
 	async handler(event: any, context: any): Promise<any> {
-		const { APP_MAIN_MODULE } = process.env;
-		const providers = this.getProviders(APP_MAIN_MODULE as string);
+		const providers = this.getProviders(this.module.name as string);
 		return providers.C.callB();
 	}
 }
 
-const handler = new Handler();
+const handler = new Handler(CModule);
 handler.handler(null, null);
