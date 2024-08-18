@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.8.0...v1.9.0) (2024-08-18)
+
+
+### Features
+
+* get provider metadata ([83e65eb](https://github.com/Techgrowth-Labs/dependency-injection/commit/83e65ebc0bd2a4e2d3f307a2903452a9d60e7cb7))
+
 ## [1.8.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.7.4...v1.8.0) (2024-08-16)
 
 
