@@ -36,4 +36,11 @@ export class ModuleMetadata {
 		Reflect.defineMetadata(tag, instance, globalTarget);
 		return tag;
 	}
+
+	public getProviderMetadata(moduleName: string, provide: string) {
+		return Reflect.getMetadata(
+			`${moduleName}:provider:${provide}`,
+			globalTarget
+		);
+	}
 }
