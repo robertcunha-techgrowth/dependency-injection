@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.0...v1.9.1) (2024-08-18)
+
+
+### Bug Fixes
+
+* get ([74c4612](https://github.com/Techgrowth-Labs/dependency-injection/commit/74c461227dafc7e0989b11b7e1c50b8757437d37))
+
 ## [1.9.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.8.0...v1.9.0) (2024-08-18)
 
 
