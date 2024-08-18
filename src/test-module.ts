@@ -8,12 +8,11 @@ export class TestModule {
 
 	constructor(module: any) {
 		this.module = module;
-		this.moduleMetadata = new ModuleMetadata();
 	}
 
-	get<ProviderType>(providerName: string): ProviderType {
+	get<ProviderType>(moduleName: string, providerName: string): ProviderType {
 		const provider = this.moduleMetadata.getProviderMetadata(
-			this.module.name,
+			moduleName,
 			providerName
 		);
 		return provider;
