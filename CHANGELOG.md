@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.2](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.1...v1.9.2) (2024-08-18)
+
+
+### Bug Fixes
+
+* module metadata ([ef85e68](https://github.com/Techgrowth-Labs/dependency-injection/commit/ef85e68ed16f8557f1e4b6e90a6dc8faeea8f420))
+
 ## [1.9.1](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.0...v1.9.1) (2024-08-18)
 
 
