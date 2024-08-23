@@ -47,8 +47,14 @@ export class ClassProvider extends BaseProvider {
 	}
 
 	public createInstance(moduleName: string, provide: string) {
-		const instance = this.moduleMetadata.getInstance(moduleName, provide);
+		// Check if we're already in the process of creating this instance
+		if (this.moduleMetadata.isInCreation(moduleName, provide)) {
+			throw new Error(
+				`Circular dependency detected for ${provide} in module ${moduleName}`
+			);
+		}
 
+		const instance = this.moduleMetadata.getInstance(moduleName, provide);
 		if (instance) {
 			return instance;
 		}
@@ -57,6 +63,9 @@ export class ClassProvider extends BaseProvider {
 		const className = this.useClass.name;
 
 		if (constructorFunction) {
+			// Mark this instance as in creation
+			this.moduleMetadata.markAsInCreation(moduleName, provide);
+
 			const parameters = this.findInstanceParameters(
 				constructorFunction,
 				className,
@@ -65,7 +74,12 @@ export class ClassProvider extends BaseProvider {
 
 			const instance = new constructorFunction(...parameters);
 			this.checkInstance(instance, provide);
+
 			this.moduleMetadata.setProviderMetadata(moduleName, provide, instance);
+
+			// Remove from the "in creation" cache
+			this.moduleMetadata.unmarkAsInCreation(moduleName, provide);
+
 			return instance;
 		} else {
 			throw new Error(
