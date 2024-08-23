@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.5](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.4...v1.9.5) (2024-08-23)
+
+
+### Bug Fixes
+
+* circular detection ([31b9f48](https://github.com/Techgrowth-Labs/dependency-injection/commit/31b9f48a48f8341f39590666b5aa6004cddd7fb3))
+
 ## [1.9.4](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.3...v1.9.4) (2024-08-23)
 
 
