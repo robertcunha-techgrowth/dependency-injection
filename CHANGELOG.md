@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.6...v1.10.0) (2024-08-23)
+
+
+### Features
+
+* order no matter anymore ([0899962](https://github.com/Techgrowth-Labs/dependency-injection/commit/0899962fbb5eb154c2ed7e490f7dd1f888ddb2b0))
+
 ## [1.9.6](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.5...v1.9.6) (2024-08-23)
 
 
