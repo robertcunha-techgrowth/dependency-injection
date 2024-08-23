@@ -68,7 +68,9 @@ export class ClassProvider extends BaseProvider {
 			this.moduleMetadata.setProviderMetadata(moduleName, provide, instance);
 			return instance;
 		} else {
-			throw new Error(`Instance not found for ${provide}`);
+			throw new Error(
+				`Instance not found for ${provide} for module ${moduleName}`
+			);
 		}
 	}
 
