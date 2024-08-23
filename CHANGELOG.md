@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.3](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.2...v1.9.3) (2024-08-23)
+
+
+### Bug Fixes
+
+* constructor and class name ([41fe9c8](https://github.com/Techgrowth-Labs/dependency-injection/commit/41fe9c84ae9c92b7705ce637c37d39b10023a147))
+
 ## [1.9.2](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.1...v1.9.2) (2024-08-18)
 
 
