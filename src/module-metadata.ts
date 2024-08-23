@@ -47,45 +47,4 @@ export class ModuleMetadata {
 			globalTarget
 		);
 	}
-
-	// New methods to handle the creation tracking
-
-	public isInCreation(moduleName: string, provide: string): boolean {
-		const creationSet = Reflect.getMetadata(
-			`${moduleName}:inCreation`,
-			globalTarget
-		);
-		return creationSet ? creationSet.has(provide) : false;
-	}
-
-	public markAsInCreation(moduleName: string, provide: string): void {
-		let creationSet = Reflect.getMetadata(
-			`${moduleName}:inCreation`,
-			globalTarget
-		);
-
-		if (!creationSet) {
-			creationSet = new Set();
-			Reflect.defineMetadata(
-				`${moduleName}:inCreation`,
-				creationSet,
-				globalTarget
-			);
-		}
-		creationSet.add(provide);
-	}
-
-	public unmarkAsInCreation(moduleName: string, provide: string): void {
-		const creationSet = Reflect.getMetadata(
-			`${moduleName}:inCreation`,
-			globalTarget
-		);
-
-		if (creationSet) {
-			creationSet.delete(provide);
-			if (creationSet.size === 0) {
-				Reflect.deleteMetadata(`${moduleName}:inCreation`, globalTarget);
-			}
-		}
-	}
 }
