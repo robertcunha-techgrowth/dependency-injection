@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.6](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.5...v1.9.6) (2024-08-23)
+
+
+### Bug Fixes
+
+* remove the shit ([bac514f](https://github.com/Techgrowth-Labs/dependency-injection/commit/bac514f2480312a957360379ec77de877afdf813))
+
 ## [1.9.5](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.4...v1.9.5) (2024-08-23)
 
 
