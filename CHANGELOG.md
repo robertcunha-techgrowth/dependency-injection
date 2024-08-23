@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.4](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.3...v1.9.4) (2024-08-23)
+
+
+### Bug Fixes
+
+* provider says the module that fail ([47aaa44](https://github.com/Techgrowth-Labs/dependency-injection/commit/47aaa4453d784846219083f30562f478ba82fb72))
+
 ## [1.9.3](https://github.com/Techgrowth-Labs/dependency-injection/compare/v1.9.2...v1.9.3) (2024-08-23)
 
 
