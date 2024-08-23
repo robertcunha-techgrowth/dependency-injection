@@ -53,15 +53,13 @@ export class ClassProvider extends BaseProvider {
 			return instance;
 		}
 
-		const constructorFunction = Reflect.getMetadata(
-			`${provide}:constructor`,
-			globalTarget
-		);
+		const constructorFunction = this.useClass;
+		const className = this.useClass.name;
 
 		if (constructorFunction) {
 			const parameters = this.findInstanceParameters(
 				constructorFunction,
-				provide,
+				className,
 				moduleName
 			);
 
