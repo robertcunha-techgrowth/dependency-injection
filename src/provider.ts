@@ -3,9 +3,11 @@ import { ModuleMetadata } from "./module-metadata";
 export abstract class BaseProvider {
 	provide?: string;
 	protected moduleMetadata: ModuleMetadata;
+	public priority: number;
 
-	constructor() {
+	constructor(priority: number) {
 		this.moduleMetadata = new ModuleMetadata();
+		this.priority = priority;
 	}
 
 	public abstract createInstance(moduleName: string, provide: string): any;
@@ -24,7 +26,7 @@ export class FactoryProvider extends BaseProvider {
 		inject?: any[];
 		useFactory: Function;
 	}) {
-		super();
+		super(2);
 		this.provide = provide;
 		this.inject = inject;
 		this.useFactory = useFactory;
@@ -41,7 +43,7 @@ export class ClassProvider extends BaseProvider {
 	useClass: any;
 
 	constructor({ provide, useClass }: { provide: string; useClass: any }) {
-		super();
+		super(1);
 		this.provide = provide;
 		this.useClass = useClass;
 	}

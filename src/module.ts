@@ -54,8 +54,9 @@ export const Module = (moduleOptions: ModuleOptions = {}): ClassDecorator => {
 
 		imports?.map((module) => setImportedModules(module, moduleName));
 
-		const instancesAsObject = providers?.reduce<Record<string, object>>(
-			(prev, provider) => {
+		const instancesAsObject = providers
+			?.sort((a, b) => b.priority - a.priority)
+			.reduce<Record<string, object>>((prev, provider) => {
 				const instance = provider.createInstance(
 					moduleName,
 					provider.provide as string
@@ -63,9 +64,7 @@ export const Module = (moduleOptions: ModuleOptions = {}): ClassDecorator => {
 				const key = provider.provide as string;
 				prev[key] = instance;
 				return prev;
-			},
-			{}
-		);
+			}, {});
 
 		Reflect.defineMetadata(
 			`${moduleName}:providers`,
